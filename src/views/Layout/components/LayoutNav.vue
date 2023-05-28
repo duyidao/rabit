@@ -1,19 +1,8 @@
 <script setup>
 import { onMounted, ref } from 'vue'
-import { getCategoryAPI } from '@api/layout'
-
-const getCategoryFn = () => {
-  getCategoryAPI().then(res => {
-    console.log(res)
-    list.value = res.result
-  })
-}
-
-const list = ref([])
-
-onMounted(() => {
-  getCategoryFn()
-})
+// pinia获取导航数据
+import { useLayoutStore } from '@/stores/layout'
+const layoutStore = useLayoutStore()
 </script>
 
 <template>
@@ -26,7 +15,7 @@ onMounted(() => {
         <li class="home">
           <RouterLink to="/">首页</RouterLink>
         </li>
-        <li v-for="item in list" :key="item.id"> <RouterLink to="/">{{ item.name }}</RouterLink> </li>
+        <li v-for="item in layoutStore.list" :key="item.id"> <RouterLink to="/">{{ item.name }}</RouterLink> </li>
       </ul>
       <div class="search">
         <i class="iconfont icon-search"></i>
