@@ -13,3 +13,17 @@ export const getBannerAPI = () => {
     url: '/home/banner'
   })
 }
+
+// 获取新鲜好物的数据
+export const getNewAPI = () => {
+  return http({
+    url: '/home/new'
+  })
+}
+
+// 获取人气推荐的数据
+export const getHotAPI = () => {
+  return http({
+    url: '/home/hot'
+  })
+}

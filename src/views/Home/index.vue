@@ -8,19 +8,24 @@ import HomePanel from './components/HomePanel.vue'
 </script>
 
 <template>
+  <!-- 轮播图 -->
   <div class="container">
     <HomeCategory />
     <HomeBanner />
   </div>
-  <!-- <HomeNew />
-  <HomeHot /> -->
-  <HomeProduct />
+
+  <!-- 新鲜好物 -->
   <HomePanel title="新鲜好物" subTitle="新鲜好物，好多商品">
-    <div>新鲜好物的插槽</div>
+    <HomeNew />
   </HomePanel>
+
+  <!-- 人气推荐 -->
   <HomePanel title="人气推荐" subTitle="人气推荐，猜你喜欢">
-    <div>人气推荐的插槽</div>
+    <HomeHot />
   </HomePanel>
+
+  <!-- 商品 -->
+  <HomeProduct />
 </template>
 
 <style scoped>
