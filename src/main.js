@@ -1,15 +1,11 @@
-import './assets/main.css'
-
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 
 import App from './App.vue'
 import router from './router'
 
-import {test} from '@api/index'
-test().then(res => {
-  console.log(res);
-})
+// 引入公共样式
+import '@/styles/common.scss'
 
 const app = createApp(App)
 
