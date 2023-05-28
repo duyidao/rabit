@@ -3,12 +3,14 @@
 </script>
 
 <template>
-  <h1>layout</h1>
+  <h1 class="priceColor">layout</h1>
 
   <!-- 二级路由 -->
   <router-view></router-view>
 </template>
 
-<style scoped>
-
+<style lang="scss" scoped>
+.priceColor {
+  color: $priceColor;
+}
 </style>
