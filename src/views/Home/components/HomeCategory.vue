@@ -14,7 +14,7 @@ const layoutStore = useLayoutStore()
         <div class="layer">
           <h4>分类推荐 <small>根据您的购买或浏览记录推荐</small></h4>
           <ul>
-            <li v-for="v in item.goods" :key="i">
+            <li v-for="v in item.goods" :key="v.id">
               <RouterLink to="/">
                 <img :src="v.picture" alt="" />
                 <div class="info">
