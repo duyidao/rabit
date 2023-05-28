@@ -1,5 +1,19 @@
 <script setup>
+import { onMounted, ref } from 'vue'
+import { getCategoryAPI } from '@api/layout'
 
+const getCategoryFn = () => {
+  getCategoryAPI().then(res => {
+    console.log(res)
+    list.value = res.result
+  })
+}
+
+const list = ref([])
+
+onMounted(() => {
+  getCategoryFn()
+})
 </script>
 
 <template>
@@ -12,9 +26,7 @@
         <li class="home">
           <RouterLink to="/">首页</RouterLink>
         </li>
-        <li> <RouterLink to="/">居家</RouterLink> </li>
-        <li> <RouterLink to="/">美食</RouterLink> </li>
-        <li> <RouterLink to="/">服饰</RouterLink> </li>
+        <li v-for="item in list" :key="item.id"> <RouterLink to="/">{{ item.name }}</RouterLink> </li>
       </ul>
       <div class="search">
         <i class="iconfont icon-search"></i>
