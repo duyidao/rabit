@@ -1,32 +1,33 @@
 <script setup>
-import { onMounted, ref } from 'vue';
-import { useRoute } from 'vue-router'
+import { onMounted, ref } from "vue";
+import { useRoute } from "vue-router";
 // 获取接口函数
-import { getBannerAPI } from '@api/layout'
-import { getTopCategoryAPI } from '@api/category'
+import { getBannerAPI } from "@api/layout";
+import { getTopCategoryAPI } from "@api/category";
 // 轮播图组件
-import BannerCarousel from '@/components/BannerCarousel.vue';
+import BannerCarousel from "@/components/BannerCarousel.vue";
+import GoodsItem from "../Home/components/GoodsItem.vue";
 
-const bannerList = ref([]) // 轮播图数组
-const categoryData = ref({}) // 分类数据
-const route = useRoute() // 路由对象
+const bannerList = ref([]); // 轮播图数组
+const categoryData = ref({}); // 分类数据
+const route = useRoute(); // 路由对象
 
 const getBannerFn = async () => {
   const res = await getBannerAPI({
-    distributionSite: '2'
-  })
-  bannerList.value = res.result
-}
+    distributionSite: "2",
+  });
+  bannerList.value = res.result;
+};
 
 const getTopCategoryFn = async (id) => {
-  const res = await getTopCategoryAPI(id)
-  categoryData.value = res.result
-}
+  const res = await getTopCategoryAPI(id);
+  categoryData.value = res.result;
+};
 
 onMounted(() => {
-  getTopCategoryFn(route.params.id)
-  getBannerFn()
-})
+  getTopCategoryFn(route.params.id);
+  getBannerFn();
+});
 </script>
 
 <template>
@@ -40,11 +41,36 @@ onMounted(() => {
         </el-breadcrumb>
       </div>
 
-      <BannerCarousel :bannerList="bannerList"/>
+      <!-- 轮播图 -->
+      <BannerCarousel :bannerList="bannerList" />
+
+      <!-- 全部分类 -->
+      <div class="sub-list">
+        <h3>全部分类</h3>
+        <ul>
+          <li v-for="i in categoryData.children" :key="i.id">
+            <RouterLink to="/">
+              <img :src="i.picture" />
+              <p>{{ i.name }}</p>
+            </RouterLink>
+          </li>
+        </ul>
+      </div>
+      <div
+        class="ref-goods"
+        v-for="item in categoryData.children"
+        :key="item.id"
+      >
+        <div class="head">
+          <h3>- {{ item.name }}-</h3>
+        </div>
+        <div class="body">
+          <GoodsItem v-for="good in item.goods" :goods="good" :key="good.id" />
+        </div>
+      </div>
     </div>
   </div>
 </template>
-
 
 <style scoped lang="scss">
 .top-category {
@@ -68,7 +94,6 @@ onMounted(() => {
       li {
         width: 168px;
         height: 160px;
-
 
         a {
           text-align: center;
