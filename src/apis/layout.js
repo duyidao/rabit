@@ -8,9 +8,13 @@ export const getCategoryAPI = () => {
 }
 
 // 获取轮播图数据
-export const getBannerAPI = () => {
+export const getBannerAPI = (params = {}) => {
+  const { distributionSite = '1' } = params
   return http({
-    url: '/home/banner'
+    url: '/home/banner',
+    params: {
+      distributionSite
+    }
   })
 }
 

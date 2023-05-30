@@ -1,7 +1,7 @@
 <script setup>
 import { onMounted, ref } from 'vue'
-// pinia获取导航数据
 import { getBannerAPI } from '@api/layout'
+import BannerCarousel from '@/components/BannerCarousel.vue';
 
 const bannerList = ref([])
 
@@ -11,23 +11,11 @@ const getBannerFn = async () => {
 }
 
 onMounted(() => getBannerFn())
-
-/*
-* 点击轮播图
-* e：当前被点击的轮播图的数据
-*/
-const handleCarouselFn = e => {
-  // this.$router.push(e.hrefUrl)
-}
 </script>
 
 <template>
   <div class="home-banner">
-    <el-carousel height="500px">
-      <el-carousel-item v-for="item in bannerList" :key="item.id" @click="handleCarouselFn(item)">
-        <img :src="item.imgUrl" alt="">
-      </el-carousel-item>
-    </el-carousel>
+    <BannerCarousel height="500" :bannerList="bannerList" />
   </div>
 </template>
 

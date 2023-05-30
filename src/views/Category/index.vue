@@ -1,19 +1,31 @@
 <script setup>
 import { onMounted, ref } from 'vue';
-import { getTopCategoryAPI } from '@api/category'
 import { useRoute } from 'vue-router'
+// 获取接口函数
+import { getBannerAPI } from '@api/layout'
+import { getTopCategoryAPI } from '@api/category'
+// 轮播图组件
+import BannerCarousel from '@/components/BannerCarousel.vue';
 
+const bannerList = ref([]) // 轮播图数组
 const categoryData = ref({}) // 分类数据
 const route = useRoute() // 路由对象
 
+const getBannerFn = async () => {
+  const res = await getBannerAPI({
+    distributionSite: '2'
+  })
+  bannerList.value = res.result
+}
+
 const getTopCategoryFn = async (id) => {
   const res = await getTopCategoryAPI(id)
-  console.log(res);
   categoryData.value = res.result
 }
 
 onMounted(() => {
   getTopCategoryFn(route.params.id)
+  getBannerFn()
 })
 </script>
 
@@ -27,6 +39,8 @@ onMounted(() => {
           <el-breadcrumb-item>{{ categoryData.name }}</el-breadcrumb-item>
         </el-breadcrumb>
       </div>
+
+      <BannerCarousel :bannerList="bannerList"/>
     </div>
   </div>
 </template>
