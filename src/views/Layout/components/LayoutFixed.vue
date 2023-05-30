@@ -1,5 +1,4 @@
 <script setup>
-import { onMounted, ref } from 'vue'
 // pinia获取导航数据
 import { useLayoutStore } from '@/stores/layout'
 // vueuse 获取y 轴滚动距离
@@ -19,7 +18,7 @@ const layoutStore = useLayoutStore()
           <RouterLink to="/">首页</RouterLink>
         </li>
         <li v-for="item in layoutStore.list" :key="item.id">
-          <RouterLink to="/">{{ item.name }}</RouterLink>
+          <RouterLink :to="`category/${item.id}`">{{ item.name }}</RouterLink>
         </li>
       </ul>
 
