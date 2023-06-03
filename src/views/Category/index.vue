@@ -1,42 +1,12 @@
 <script setup>
-import { onMounted, ref } from "vue";
-import { useRoute, onBeforeRouteUpdate } from "vue-router";
-// 获取接口函数
-import { getBannerAPI } from "@api/layout";
-import { getTopCategoryAPI } from "@api/category";
 // 轮播图组件
 import BannerCarousel from "@/components/BannerCarousel.vue";
 import GoodsItem from "../Home/components/GoodsItem.vue";
+import { useBanner } from './composables/useBanner'
+import { useCategory } from './composables/useCategory'
 
-const bannerList = ref([]); // 轮播图数组
-const categoryData = ref({}); // 分类数据
-const route = useRoute(); // 路由对象
-
-const getBannerFn = async () => {
-  const res = await getBannerAPI({
-    distributionSite: "2",
-  });
-  bannerList.value = res.result;
-};
-
-const getTopCategoryFn = async (id) => {
-  const res = await getTopCategoryAPI(id);
-  categoryData.value = res.result;
-};
-
-onMounted(() => {
-  getTopCategoryFn(route.params.id);
-  getBannerFn();
-});
-
-/**
- * 侦听路由变化，重新调用接口
- * to：当前最新路由参数
- * */
-onBeforeRouteUpdate((to) => {
-  // 存在问题：使用最新的路由参数请求最新的分类数据
-  getTopCategoryFn(to.params.id);
-})
+const { bannerList } = useBanner()
+const { categoryData } = useCategory()
 </script>
 
 <template>
