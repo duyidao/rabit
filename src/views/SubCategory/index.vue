@@ -11,17 +11,37 @@ const getCategoryFilterFn = async () => {
   subCategoryData.value = res.result;
 };
 
-const goodsList = ref([])
+const subCategoryObj = ref({
+  categoryId: route.params.id,
+  page: 1,
+  pageSize: 20,
+  sortField: "publishTime",
+});
+const goodsList = ref([]);
+const disabled = ref(false); // 是否需要继续刷新，为true则不需要
 const getSubCategoryFn = async () => {
-  const res = await getSubCategoryAPI({
-    categoryId: route.params.id,
-    page: 1,
-    pageSize: 20,
-    sortField: 'publishTime'
-  })
-  console.log(res);
-  goodsList.value = res.result.items
-}
+  const res = await getSubCategoryAPI(subCategoryObj.value);
+  goodsList.value = [...goodsList.value, ...res.result.items];
+
+  // 数据加载完毕
+  if (
+    subCategoryObj.value.page * subCategoryObj.value.pageSize >=
+    res.result.counts
+  ) {
+    disabled.value = true;
+  }
+};
+
+const handleClick = (e) => {
+  subCategoryObj.value.sortField = e;
+  getSubCategoryFn();
+};
+
+// 滚动到底部
+const infiniteScrollFn = (e) => {
+  subCategoryObj.value.page += 1;
+  getSubCategoryFn();
+};
 
 onMounted(() => getCategoryFilterFn());
 onMounted(() => getSubCategoryFn());
@@ -41,12 +61,12 @@ onMounted(() => getSubCategoryFn());
       </el-breadcrumb>
     </div>
     <div class="sub-container">
-      <el-tabs>
+      <el-tabs v-model="subCategoryObj.sortField" @tab-change="handleClick">
         <el-tab-pane label="最新商品" name="publishTime"></el-tab-pane>
         <el-tab-pane label="最高人气" name="orderNum"></el-tab-pane>
         <el-tab-pane label="评论最多" name="evaluateNum"></el-tab-pane>
       </el-tabs>
-      <div class="body">
+      <div class="body" v-infinite-scroll="infiniteScrollFn" :infinite-scroll-disabled="disabled">
         <!-- 商品列表-->
         <GoodsItem v-for="good in goodsList" :goods="good" :key="good.id" />
       </div>
