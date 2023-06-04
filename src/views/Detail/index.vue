@@ -3,14 +3,13 @@ import { ref, onMounted } from "vue";
 import {useRoute} from 'vue-router'
 import { getDetail } from "@api/detail";
 import DetailHot from './components/DetailHot.vue'
+import DetailImage from './components/DetailImage.vue'
 
 const route = useRoute()
 const goodData = ref({})
 const getDetailFn = async () => {
   const res= await getDetail(route.params.id)
-  console.log(res);
   goodData.value = res.result
-  console.log(goodData.value);
 }
 
 onMounted(() => getDetailFn())
@@ -33,7 +32,7 @@ onMounted(() => getDetailFn())
           <div class="goods-info">
             <div class="media">
               <!-- 图片预览区 -->
-
+              <DetailImage />
               <!-- 统计数量 -->
               <ul class="goods-sales">
                 <li>
