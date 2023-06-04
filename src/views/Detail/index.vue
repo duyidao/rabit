@@ -2,6 +2,7 @@
 import { ref, onMounted } from "vue";
 import {useRoute} from 'vue-router'
 import { getDetail } from "@api/detail";
+import DetailHot from './components/DetailHot.vue'
 
 const route = useRoute()
 const goodData = ref({})
@@ -111,7 +112,9 @@ onMounted(() => getDetailFn())
               </div>
             </div>
             <!-- 24热榜+专题推荐 -->
-            <div class="goods-aside"></div>
+            <div class="goods-aside">
+              <DetailHot />
+            </div>
           </div>
         </div>
       </div>
