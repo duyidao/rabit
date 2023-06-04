@@ -1,7 +1,8 @@
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import { fetchHotGoodsAPI } from "@api/detail";
 import {useRoute} from 'vue-router'
+
 // type适配不同类型热榜数据
 const props = defineProps({
   type: {
@@ -9,6 +10,13 @@ const props = defineProps({
     default: 1,
   },
 });
+
+// 适配title：1为24小时；2为一周
+const TYPEMAP = {
+  1: '24小时热榜',
+  2: '周热榜'
+}
+const title = computed(() => TYPEMAP[props.type])
 
 const route = useRoute()
 
@@ -26,7 +34,7 @@ onMounted(() => fetchHotGoodsFn())
 
 <template>
   <div class="goods-hot">
-    <h3>周日榜单</h3>
+    <h3>{{ title }}</h3>
     <!-- 商品区块 -->
     <RouterLink to="/" class="goods-item" v-for="item in hotList" :key="item.id">
       <img :src="item.picture" alt="" />

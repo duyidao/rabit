@@ -113,7 +113,10 @@ onMounted(() => getDetailFn())
             </div>
             <!-- 24热榜+专题推荐 -->
             <div class="goods-aside">
-              <DetailHot />
+              <!-- 24小时 -->
+              <DetailHot :type="1" />
+              <!-- 一周 -->
+              <DetailHot :type="2" />
             </div>
           </div>
         </div>
