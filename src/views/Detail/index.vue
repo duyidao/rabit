@@ -27,12 +27,12 @@ onMounted(() => getDetailFn())
         </el-breadcrumb>
       </div>
       <!-- 商品信息 -->
-      <div class="info-container">
+      <div class="info-container" v-if="goodData.id">
         <div>
           <div class="goods-info">
             <div class="media">
               <!-- 图片预览区 -->
-              <DetailImage />
+              <DetailImage :imageList="goodData.mainPictures" />
               <!-- 统计数量 -->
               <ul class="goods-sales">
                 <li>
