@@ -1,7 +1,6 @@
 <script setup>
 import { onMounted, ref } from 'vue'
 import { getBannerAPI } from '@api/layout'
-import BannerCarousel from '@/components/BannerCarousel.vue';
 
 const bannerList = ref([])
 

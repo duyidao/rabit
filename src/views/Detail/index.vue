@@ -13,6 +13,11 @@ const getDetailFn = async () => {
 }
 
 onMounted(() => getDetailFn())
+
+// sku变更
+const skuChangeFn = ({...e}) => {
+  console.log(e);
+}
 </script>
 
 <template>
@@ -81,7 +86,7 @@ onMounted(() => getDetailFn())
                 </dl>
               </div>
               <!-- sku组件 -->
-
+              <XtxSku :goods="goodData" @change="skuChangeFn" />
               <!-- 数据组件 -->
 
               <!-- 按钮组件 -->

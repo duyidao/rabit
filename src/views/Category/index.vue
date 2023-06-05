@@ -1,6 +1,5 @@
 <script setup>
 // 轮播图组件
-import BannerCarousel from "@/components/BannerCarousel.vue";
 import GoodsItem from "../Home/components/GoodsItem.vue";
 import { useBanner } from './composables/useBanner'
 import { useCategory } from './composables/useCategory'
