@@ -3,9 +3,11 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { ElMessage } from "element-plus";
 import "element-plus/theme-chalk/el-message.css";
-import { loginAPI } from "@api/login";
+import { useUserStore } from '@/stores/user'
 
 const router = useRouter();
+
+const { userinfo, getUserInfoFn } = useUserStore()
 
 // 表单校验（账号+密码）
 const form = ref({
@@ -45,11 +47,9 @@ const rules = ref({
 // 3.获取form实例
 const formRef = ref(null);
 const doLofin = () => {
-  let res;
   formRef.value.validate(async (valid) => {
     if (valid) {
-      res = await loginAPI(form.value);
-      console.log(res);
+      await getUserInfoFn(form.value);
       // 成功后提示用户
       ElMessage({ type: "success", message: "登陆成功" });
       // 跳转首页
