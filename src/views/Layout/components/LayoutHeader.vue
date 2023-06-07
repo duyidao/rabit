@@ -1,7 +1,14 @@
 <script setup>
-import { useUserStore} from '@/stores/user'
+import {useRouter} from 'vue-router'
+import { useUserStore } from "@/stores/user";
 
-const {userinfo} = useUserStore()
+const { userinfo, logoutFn } = useUserStore();
+const router = useRouter()
+
+const comfirmFn = async () => {
+  logoutFn()
+  router.push({path: '/login'})
+};
 </script>
 
 <template>
@@ -10,9 +17,18 @@ const {userinfo} = useUserStore()
       <ul>
         <!-- 多模块模板，区分登录与未登录 -->
         <template v-if="userinfo.token">
-          <li><a href="javascript:;"><i class="iconfont icon-ren"></i>{{ userinfo.account }}</a></li>
           <li>
-            <el-popconfirm title="确认退出吗?" confirm-button-text="确认" cancel-button-text="取消">
+            <a href="javascript:;"
+              ><i class="iconfont icon-ren"></i>{{ userinfo.account }}</a
+            >
+          </li>
+          <li>
+            <el-popconfirm
+              title="确认退出吗?"
+              confirm-button-text="确认"
+              cancel-button-text="取消"
+              @confirm="comfirmFn"
+            >
               <template #reference>
                 <a href="javascript:;">退出登录</a>
               </template>
@@ -22,7 +38,9 @@ const {userinfo} = useUserStore()
           <li><a href="javascript:;">会员中心</a></li>
         </template>
         <template v-else>
-          <li><a href="javascript:;" @click="$router.push('/login')">请先登录</a></li>
+          <li>
+            <a href="javascript:;" @click="$router.push('/login')">请先登录</a>
+          </li>
           <li><a href="javascript:;">帮助中心</a></li>
           <li><a href="javascript:;">关于我们</a></li>
         </template>
@@ -30,7 +48,6 @@ const {userinfo} = useUserStore()
     </div>
   </nav>
 </template>
-
 
 <style scoped lang="scss">
 .app-topnav {
@@ -57,7 +74,7 @@ const {userinfo} = useUserStore()
         }
       }
 
-      ~li {
+      ~ li {
         a {
           border-left: 2px solid #666;
         }
