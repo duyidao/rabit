@@ -1,23 +1,44 @@
 <script setup>
 import { ref, onMounted } from "vue";
-import {useRoute} from 'vue-router'
+import { useRoute } from "vue-router";
 import { getDetail } from "@api/detail";
-import DetailHot from './components/DetailHot.vue'
-import DetailImage from './components/DetailImage.vue'
+import DetailHot from "./components/DetailHot.vue";
+import DetailImage from "./components/DetailImage.vue";
+import { useCarttStore } from "@/stores/cart";
+import { ElMessage } from "element-plus";
+import "element-plus/theme-chalk/el-message.css";
 
-const route = useRoute()
-const goodData = ref({})
+const route = useRoute();
+const goodData = ref({});
+const { addCart } = useCarttStore()
 const getDetailFn = async () => {
-  const res= await getDetail(route.params.id)
-  goodData.value = res.result
-}
+  const res = await getDetail(route.params.id);
+  goodData.value = res.result;
+};
 
-onMounted(() => getDetailFn())
+onMounted(() => getDetailFn());
 
 // sku变更
-const skuChangeFn = ({...e}) => {
-  console.log(e);
-}
+const sku = ref({});
+const skuChangeFn = ({ ...e }) => {
+  sku.value = e;
+};
+
+// 数量变更
+const count = ref(1);
+const handleCountChange = (e) => {
+  count.value = e;
+};
+
+const handleAddFn = () => {
+  if (sku.value.skuId) {
+    // 规格已经选全
+    addCart({...sku.value, count: count.value, ...goodData.value});
+  } else {
+    // 没选全规格
+    ElMessage({ type: "warning", message: "请选择规格" });
+  }
+};
 </script>
 
 <template>
@@ -26,8 +47,14 @@ const skuChangeFn = ({...e}) => {
       <div class="bread-container">
         <el-breadcrumb separator=">">
           <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-          <el-breadcrumb-item :to="{ path: `/category/${goodData.categories?.[0].id}` }">{{ goodData.categories?.[0].name }} </el-breadcrumb-item>
-          <el-breadcrumb-item :to="{ path: `/category/${goodData.categories?.[1].id}` }">{{ goodData.categories?.[1].name }} </el-breadcrumb-item>
+          <el-breadcrumb-item
+            :to="{ path: `/category/${goodData.categories?.[0].id}` }"
+            >{{ goodData.categories?.[0].name }}
+          </el-breadcrumb-item>
+          <el-breadcrumb-item
+            :to="{ path: `/category/${goodData.categories?.[1].id}` }"
+            >{{ goodData.categories?.[1].name }}
+          </el-breadcrumb-item>
           <el-breadcrumb-item>{{ goodData.name }}</el-breadcrumb-item>
         </el-breadcrumb>
       </div>
@@ -88,10 +115,17 @@ const skuChangeFn = ({...e}) => {
               <!-- sku组件 -->
               <XtxSku :goods="goodData" @change="skuChangeFn" />
               <!-- 数据组件 -->
-
+              <el-input-number
+                v-model="count"
+                :min="1"
+                :max="10"
+                @change="handleCountChange"
+              />
               <!-- 按钮组件 -->
               <div>
-                <el-button size="large" class="btn"> 加入购物车 </el-button>
+                <el-button size="large" class="btn" @click="handleAddFn">
+                  加入购物车
+                </el-button>
               </div>
             </div>
           </div>
@@ -105,13 +139,21 @@ const skuChangeFn = ({...e}) => {
                 <div class="goods-detail">
                   <!-- 属性 -->
                   <ul class="attrs">
-                    <li v-for="item in goodData.details?.properties" :key="item.value">
+                    <li
+                      v-for="item in goodData.details?.properties"
+                      :key="item.value"
+                    >
                       <span class="dt">{{ item.name }}</span>
                       <span class="dd">{{ item.value }}</span>
                     </li>
                   </ul>
                   <!-- 图片 -->
-                  <img v-for="(img, index) in goodData.details?.pictures" :key="index" :src="img" alt="">
+                  <img
+                    v-for="(img, index) in goodData.details?.pictures"
+                    :key="index"
+                    :src="img"
+                    alt=""
+                  />
                 </div>
               </div>
             </div>
