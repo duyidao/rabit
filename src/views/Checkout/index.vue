@@ -1,8 +1,11 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { getCheckInfoAPI } from "@api/checkout";
+import AddressDialog from './components/AddressDialog.vue'
+
 const checkInfo = ref({}); // 订单对象
 const curAddress = ref({}); // 地址对象
+const show = ref(false)
 
 const getCheckInfoFn = async () => {
   const res = await getCheckInfoAPI();
@@ -14,6 +17,10 @@ const getCheckInfoFn = async () => {
 };
 
 onMounted(() => getCheckInfoFn());
+
+const handleConfirmFn = e => {
+  curAddress.value = e
+}
 </script>
 
 <template>
@@ -40,7 +47,7 @@ onMounted(() => getCheckInfoFn());
               </ul>
             </div>
             <div class="action">
-              <el-button size="large" @click="toggleFlag = true"
+              <el-button size="large" @click="show = true"
                 >切换地址</el-button
               >
               <el-button size="large" @click="addFlag = true"
@@ -129,6 +136,7 @@ onMounted(() => getCheckInfoFn());
     </div>
   </div>
   <!-- 切换地址 -->
+  <AddressDialog v-model="show" :checkInfo="checkInfo" @handleConfirmFn="handleConfirmFn" />
   <!-- 添加地址 -->
 </template>
 
@@ -313,35 +321,5 @@ onMounted(() => getCheckInfoFn());
   text-align: right;
   padding: 60px;
   border-top: 1px solid #f5f5f5;
-}
-
-.addressWrapper {
-  max-height: 500px;
-  overflow-y: auto;
-}
-
-.text {
-  flex: 1;
-  min-height: 90px;
-  display: flex;
-  align-items: center;
-
-  &.item {
-    border: 1px solid #f5f5f5;
-    margin-bottom: 10px;
-    cursor: pointer;
-
-    &.active,
-    &:hover {
-      border-color: $xtxColor;
-      background: lighten($xtxColor, 50%);
-    }
-
-    > ul {
-      padding: 10px;
-      font-size: 14px;
-      line-height: 30px;
-    }
-  }
 }
 </style>
