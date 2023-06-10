@@ -1,26 +1,61 @@
 <script setup>
 import { ref, onMounted } from "vue";
+import { useRouter } from "vue-router";
 import { getCheckInfoAPI } from "@api/checkout";
-import AddressDialog from './components/AddressDialog.vue'
+import AddressDialog from "./components/AddressDialog.vue";
+import { createOrderAPI } from "@api/pay";
+import { useCarttStore } from "@/stores/cart";
 
 const checkInfo = ref({}); // 订单对象
 const curAddress = ref({}); // 地址对象
-const show = ref(false)
+const show = ref(false);
+const router = useRouter();
+const { getCartListFn } = useCarttStore();
 
 const getCheckInfoFn = async () => {
   const res = await getCheckInfoAPI();
-  if(res.code === '1') {
+  if (res.code === "1") {
     checkInfo.value = res.result;
     // 获取适配地址
-    curAddress.value = res.result.userAddresses.find(item => item.isDefault === 0)
+    curAddress.value = res.result.userAddresses.find(
+      (item) => item.isDefault === 0
+    );
   }
 };
 
 onMounted(() => getCheckInfoFn());
 
-const handleConfirmFn = e => {
-  curAddress.value = e
-}
+// 点击确定按钮修改地址
+const handleConfirmFn = (e) => {
+  curAddress.value = e;
+};
+
+// 点击订单按钮创建订单
+const handleToPayFn = async () => {
+  const res = await createOrderAPI({
+    deliveryTimeType: 1,
+    payType: 1,
+    payChannel: 1,
+    buyerMessage: "",
+    goods: checkInfo.value.goods.map((item) => {
+      return {
+        skuId: item.skuId,
+        count: item.count,
+      };
+    }),
+    addressId: curAddress.value.id,
+  });
+  const orderId = res.result.id;
+  // 跳转页面，传递订单id
+  router.push({
+    path: "/pay",
+    query: {
+      id: orderId,
+    },
+  });
+  // 更新购物车
+  getCartListFn();
+};
 </script>
 
 <template>
@@ -47,9 +82,7 @@ const handleConfirmFn = e => {
               </ul>
             </div>
             <div class="action">
-              <el-button size="large" @click="show = true"
-                >切换地址</el-button
-              >
+              <el-button size="large" @click="show = true">切换地址</el-button>
               <el-button size="large" @click="addFlag = true"
                 >添加地址</el-button
               >
@@ -130,13 +163,19 @@ const handleConfirmFn = e => {
         </div>
         <!-- 提交订单 -->
         <div class="submit">
-          <el-button type="primary" size="large">提交订单</el-button>
+          <el-button type="primary" size="large" @click="handleToPayFn"
+            >提交订单</el-button
+          >
         </div>
       </div>
     </div>
   </div>
   <!-- 切换地址 -->
-  <AddressDialog v-model="show" :checkInfo="checkInfo" @handleConfirmFn="handleConfirmFn" />
+  <AddressDialog
+    v-model="show"
+    :checkInfo="checkInfo"
+    @handleConfirmFn="handleConfirmFn"
+  />
   <!-- 添加地址 -->
 </template>
 
