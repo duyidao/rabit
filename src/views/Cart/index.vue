@@ -5,7 +5,7 @@ import { useCarttStore } from "@/stores/cart";
 import { storeToRefs } from "pinia";
 
 const { cartList, cartChoseCount, cartChosePrice } = storeToRefs(useCarttStore());
-const { delCart, updateCheck, updateAllCheck } = useCarttStore();
+const { delCart, updateCheck, updateAllCheck, updateCount } = useCarttStore();
 const router = useRouter();
 
 // 点击修改选中状态
@@ -19,6 +19,11 @@ const allChecked = computed(() => cartList.value.length && cartList.value.every(
 // 点击全选
 const handleAllCheckFn = e => {
   updateAllCheck(e);
+}
+
+// 切换数量
+const handleChangeCountFn = (e, i) => {
+  updateCount(e, i);
 }
 </script>
 
@@ -64,7 +69,7 @@ const handleAllCheckFn = e => {
                 <p>&yen;{{ i.price }}</p>
               </td>
               <td class="tc">
-                <el-input-number v-model="i.count" />
+                <el-input-number :min="1" :model-value="i.count" @change="(e) => handleChangeCountFn(e, i)" />
               </td>
               <td class="tc">
                 <p class="f16 red">&yen;{{ (i.price * i.count).toFixed(2) }}</p>
