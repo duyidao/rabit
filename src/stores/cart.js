@@ -91,7 +91,7 @@ export const useCarttStore = defineStore('cart', () => {
 
   // 清空购物车
   const clearCart = () => {
-    cartList.value = {}
+    cartList.value = []
   }
 
   return { cartList, addCart, delCart, cartCount, cartPrice, cartChoseCount, cartChosePrice, updateCheck, updateAllCheck, updateCount, clearCart, getCartListFn }

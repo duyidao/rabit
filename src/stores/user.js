@@ -14,7 +14,7 @@ export const useUserStore = defineStore('user', () => {
     userinfo.value = res.result || {}
 
     // 登陆后合并购物车，再获取最新的购物车数据
-    await mergeCartListAPI(cartList.map(item => {
+    cartList && await mergeCartListAPI(cartList.map(item => {
       return {
         skuId: item.skuId,
         count: item.count,

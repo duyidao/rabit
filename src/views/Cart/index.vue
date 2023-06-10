@@ -25,6 +25,11 @@ const handleAllCheckFn = e => {
 const handleChangeCountFn = (e, i) => {
   updateCount(e, i);
 }
+
+// 点击跳转到支付页面
+const handleToPayFn = () => {
+  router.push({path: '/checkout'})
+}
 </script>
 
 <template>
@@ -108,7 +113,7 @@ const handleChangeCountFn = (e, i) => {
           <span class="red">¥ {{ cartChosePrice }} </span>
         </div>
         <div class="total">
-          <el-button size="large" type="primary">下单结算</el-button>
+          <el-button size="large" type="primary" @click="handleToPayFn">下单结算</el-button>
         </div>
       </div>
     </div>
