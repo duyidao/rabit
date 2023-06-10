@@ -8,3 +8,10 @@ export const createOrderAPI = (data) => {
     data
   })
 }
+
+// 获取订单详情
+export const getPayDetailAPI = (id) => {
+  return http({
+    url: `/member/order/${id}`
+  })
+}

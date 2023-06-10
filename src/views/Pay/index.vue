@@ -1,7 +1,17 @@
 <script setup>
-import { ref } from "vue";
-import { createOrderAPI } from "@api/pay";
+import { ref, onMounted } from "vue";
+import { useRoute } from "vue-router";
+import { getPayDetailAPI } from "@api/pay";
+
+const route = useRoute();
 const payInfo = ref({});
+
+const getPayFn = async () => {
+  const res = await getPayDetailAPI(route.query.id);
+  payInfo.value = res.result;
+};
+
+onMounted(() => getPayFn())
 </script>
 
 <template>
