@@ -1,7 +1,7 @@
 <script setup>
 import { useCarttStore } from "@/stores/cart";
 
-const { cartList, delCart } = useCarttStore()
+const { cartList, delCart, cartCount, cartPrice } = useCarttStore()
 </script>
 
 <template>
@@ -32,8 +32,8 @@ const { cartList, delCart } = useCarttStore()
       </div>
       <div class="foot">
         <div class="total">
-          <p>共 10 件商品</p>
-          <p>&yen; 100.00 </p>
+          <p>共 {{ cartCount }} 件商品</p>
+          <p>&yen; {{ cartPrice }} </p>
         </div>
         <el-button size="large" type="primary" >去购物车结算</el-button>
       </div>

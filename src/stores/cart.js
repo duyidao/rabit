@@ -1,8 +1,10 @@
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 
 export const useCarttStore = defineStore('cart', () => {
   const cartList = ref([]) // 购物车列表数据
+  const cartCount = ref(0) // 购物车商品总数
+  const cartPrice = ref(0) // 购物车商品总价
 
   const addCart = (e) => {
     // 添加购物车操作
@@ -26,12 +28,17 @@ export const useCarttStore = defineStore('cart', () => {
     }
   }
 
+  // 购物车数据计算
+  cartCount.value = computed(() => cartList.value.reduce((pre, next) => pre + next.count, 0))
+  // 购物车总价数据计算
+  cartPrice.value = computed(() => cartList.value.reduce((pre, next) => pre + next.count * next.price, 0))
+
   // 删除购物车内容
   const delCart = skuId => {
     cartList.value = cartList.value.filter(item => item.skuId !== skuId)
   }
 
-  return { cartList, addCart, delCart }
+  return { cartList, addCart, delCart, cartCount, cartPrice }
 }, {
   persist: true
 })
