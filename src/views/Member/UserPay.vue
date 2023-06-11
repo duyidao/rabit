@@ -1,4 +1,7 @@
 <script setup>
+import { ref, onMounted } from "vue";
+import { getUserOrder } from "@api/user";
+
 // tab列表
 const tabTypes = [
   { name: "all", label: "全部订单" },
@@ -7,18 +10,48 @@ const tabTypes = [
   { name: "receive", label: "待收货" },
   { name: "comment", label: "待评价" },
   { name: "complete", label: "已完成" },
-  { name: "cancel", label: "已取消" }
-]
+  { name: "cancel", label: "已取消" },
+];
 // 订单列表
-const orderList = []
+const orderList = ref([]);
+const params = ref({
+  orderState: 0,
+  page: 1,
+  pageSize: 2,
+});
+const total = ref(0)
 
+const getOrderFn = async () => {
+  const res = await getUserOrder(params.value);
+  orderList.value = res.result.items;
+  // 存入总条数
+  total.value = res.result.counts
+};
+
+onMounted(() => getOrderFn());
+
+// tab切换
+const tabChange = (e) => {
+  params.value.orderState = e;
+  getOrderFn();
+};
+
+// 页数切换
+const pageChange = (page) => {
+  params.value.page = page
+  getOrderFn()
+}
 </script>
 
 <template>
   <div class="order-container">
-    <el-tabs>
+    <el-tabs @tab-change="tabChange">
       <!-- tab切换 -->
-      <el-tab-pane v-for="item in tabTypes" :key="item.name" :label="item.label" />
+      <el-tab-pane
+        v-for="item in tabTypes"
+        :key="item.name"
+        :label="item.label"
+      />
 
       <div class="main-container">
         <div class="holder-container" v-if="orderList.length === 0">
@@ -33,7 +66,7 @@ const orderList = []
               <!-- 未付款，倒计时时间还有 -->
               <span class="down-time" v-if="order.orderState === 1">
                 <i class="iconfont icon-down-time"></i>
-                <b>付款截止: {{order.countdown}}</b>
+                <b>付款截止: {{ order.countdown }}</b>
               </span>
             </div>
             <div class="body">
@@ -74,11 +107,18 @@ const orderList = []
                 <p>在线支付</p>
               </div>
               <div class="column action">
-                <el-button  v-if="order.orderState === 1" type="primary"
-                  size="small">
+                <el-button
+                  v-if="order.orderState === 1"
+                  type="primary"
+                  size="small"
+                >
                   立即付款
                 </el-button>
-                <el-button v-if="order.orderState === 3" type="primary" size="small">
+                <el-button
+                  v-if="order.orderState === 3"
+                  type="primary"
+                  size="small"
+                >
                   确认收货
                 </el-button>
                 <p><a href="javascript:;">查看详情</a></p>
@@ -88,20 +128,20 @@ const orderList = []
                 <p v-if="[4, 5].includes(order.orderState)">
                   <a href="javascript:;">申请售后</a>
                 </p>
-                <p v-if="order.orderState === 1"><a href="javascript:;">取消订单</a></p>
+                <p v-if="order.orderState === 1">
+                  <a href="javascript:;">取消订单</a>
+                </p>
               </div>
             </div>
           </div>
           <!-- 分页 -->
           <div class="pagination-container">
-            <el-pagination background layout="prev, pager, next" />
+            <el-pagination :page-size="params.pageSize" :total="total" @current-change="pageChange" background layout="prev, pager, next" />
           </div>
         </div>
       </div>
-
     </el-tabs>
   </div>
-
 </template>
 
 <style scoped lang="scss">
@@ -171,7 +211,7 @@ const orderList = []
       text-align: center;
       padding: 20px;
 
-      >p {
+      > p {
         padding-top: 10px;
       }
 
