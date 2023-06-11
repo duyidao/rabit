@@ -64,6 +64,10 @@ const router = createRouter({
       path: '/login',
       component: Login,
     },
+    {
+      path: '/test',
+      component: () => import('@/views/Test/sku.vue'),
+    },
   ],
   // 路由滚动行为定制
   scrollBehavior (to, from, savedPosition) {

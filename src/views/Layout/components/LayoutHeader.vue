@@ -35,7 +35,7 @@ const comfirmFn = async () => {
             </el-popconfirm>
           </li>
           <li><RouterLink to="/member/pay">我的订单</RouterLink></li>
-          <li><RouterLink to="/member/user">会员中心</RouterLink></li>
+          <li><RouterLink to="/member">会员中心</RouterLink></li>
         </template>
         <template v-else>
           <li>
