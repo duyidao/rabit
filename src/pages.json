@@ -1,0 +1,43 @@
+{
+	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+		{
+			"path": "pages/index/index",
+			"style": {
+				"navigationBarTitleText": "首页"
+			}
+		}, {
+			"path": "pages/my/index",
+			"style": {
+				"navigationBarTitleText": "我的"
+			}
+		}
+	    ,{
+            "path" : "pages/my/my",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "我的"
+            }
+            
+        }
+    ],
+	"globalStyle": {
+		"navigationBarTextStyle": "white",
+		"navigationBarTitleText": "小兔鲜",
+		"navigationBarBackgroundColor": "#27ba9b",
+		"backgroundColor": "#27ba9b"
+	},
+	"tabBar": {
+		"selectedColor": "#27ba9b",
+		"list": [
+			{
+				"text": "首页",
+				"pagePath": "pages/index/index"
+			},
+			{
+				"text": "我的",
+				"pagePath": "pages/my/index"
+			}
+		]
+	},
+	"uniIdRouter": {}
+}
