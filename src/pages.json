@@ -28,6 +28,12 @@
       "style": {
         "navigationBarTitleText": "购物车"
       }
+    },
+    {
+      "path": "pages/login/index",
+      "style": {
+        "navigationBarTitleText": "登录"
+      }
     }
   ],
   "globalStyle": {

@@ -69,12 +69,33 @@ export const http = <T>(options: UniApp.RequestOptions) => {
 
       // 请求成功
       success(res) {
-        // 提取核心数据 res.data
-        resolve(res.data as Data<T>)
+        console.log(res)
+
+        if (res.statusCode >= 200 && res.statusCode < 300) {
+          // 提取核心数据 res.data
+          resolve(res.data as Data<T>)
+        } else if (res.statusCode === 401) {
+          // 登录过期，清除登录信息
+          const memberStore = useMemberStore()
+          memberStore.clearProfile()
+          // 返回登录页
+          uni.navigateTo({ url: '/pages/login/index' })
+          reject(res)
+        } else {
+          uni.showToast({
+            icon: 'none',
+            title: (res.data as Data<T>).msg || '请求错误',
+          })
+          reject(res)
+        }
       },
 
       // 请求失败
       fail(err) {
+        uni.showToast({
+          icon: 'none',
+          title: '网络错误，换个网络试试',
+        })
         // 给予轻提示
         reject(err)
       },

@@ -1,14 +1,22 @@
 <script setup lang="ts">
 import { useMemberStore } from '@/stores'
-import '@/utils/http'
+import { http } from '@/utils/http'
 
 const memberStore = useMemberStore()
 
-const a = () => {
-  uni.request({
+const a = async () => {
+  const res = await http({
     method: 'GET',
     url: '/home/banner',
   })
+  console.log(res)
+}
+const b = async () => {
+  const res = await http({
+    method: 'GET',
+    url: '/member/profile',
+  })
+  console.log(res)
 }
 </script>
 
@@ -29,6 +37,7 @@ const a = () => {
     </button>
     <button @tap="memberStore.clearProfile()" size="mini" plain type="warn">清理用户信息</button>
     <button @tap="a()" size="mini" plain type="warn">faqingqio</button>
+    <button @tap="b()" size="mini" plain type="warn">个人i休尼希</button>
   </view>
 </template>
 
