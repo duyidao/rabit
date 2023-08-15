@@ -1,43 +1,63 @@
 {
-	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
-		{
-			"path": "pages/index/index",
-			"style": {
-				"navigationBarTitleText": "首页"
-			}
-		}, {
-			"path": "pages/my/index",
-			"style": {
-				"navigationBarTitleText": "我的"
-			}
-		}
-	    ,{
-            "path" : "pages/my/my",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "我的"
-            }
-            
-        }
-    ],
-	"globalStyle": {
-		"navigationBarTextStyle": "white",
-		"navigationBarTitleText": "小兔鲜",
-		"navigationBarBackgroundColor": "#27ba9b",
-		"backgroundColor": "#27ba9b"
-	},
-	"tabBar": {
-		"selectedColor": "#27ba9b",
-		"list": [
-			{
-				"text": "首页",
-				"pagePath": "pages/index/index"
-			},
-			{
-				"text": "我的",
-				"pagePath": "pages/my/index"
-			}
-		]
-	},
-	"uniIdRouter": {}
+  // 组件自动引入规则
+  "easycom": {
+    // 是否开启自动扫描
+    "autoscan": true,
+    // 正则方式自定义组件匹配规则
+    "custom": {
+      // uni-ui 规则如下配置
+      "^uni-(.*)": "@dcloudio/uni-ui/lib/uni-$1/uni-$1.vue"
+    }
+  },
+  "pages": [
+    //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+    {
+      "path": "pages/index/index",
+      "style": {
+        "navigationBarTitleText": "首页"
+      }
+    },
+    {
+      "path": "pages/my/index",
+      "style": {
+        "navigationBarTitleText": "我的"
+      }
+    },
+    {
+      "path": "pages/cart/index",
+      "style": {
+        "navigationBarTitleText": "购物车"
+      }
+    }
+  ],
+  "globalStyle": {
+    "navigationBarTextStyle": "white",
+    "navigationBarTitleText": "小兔鲜",
+    "navigationBarBackgroundColor": "#27ba9b",
+    "backgroundColor": "#27ba9b"
+  },
+  "tabBar": {
+    "selectedColor": "#27ba9b",
+    "list": [
+      {
+        "text": "首页",
+        "pagePath": "pages/index/index",
+        "iconPath": "static/tabs/home_default.png",
+        "selectedIconPath": "static/tabs/home_selected.png"
+      },
+      {
+        "text": "购物车",
+        "pagePath": "pages/cart/index",
+        "iconPath": "static/tabs/cart_default.png",
+        "selectedIconPath": "static/tabs/cart_selected.png"
+      },
+      {
+        "text": "我的",
+        "pagePath": "pages/my/index",
+        "iconPath": "static/tabs/user_default.png",
+        "selectedIconPath": "static/tabs/user_selected.png"
+      }
+    ]
+  },
+  "uniIdRouter": {}
 }
