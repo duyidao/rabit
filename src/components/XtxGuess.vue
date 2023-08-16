@@ -3,20 +3,34 @@ import { onMounted, ref } from 'vue'
 import { getHomeGuessApi } from '@/services/home'
 import type { PageParams, GuessItem } from '@/types/home'
 
-const pageParams = ref<PageParams>({
+const pageParams = ref<Required<PageParams>>({
   page: 1,
   pageSize: 10,
 })
 
 const guessList = ref<GuessItem[]>([])
+const finish = ref<boolean>(false)
 const getHomeGuessFn = async () => {
+  if (finish.value) return uni.showToast({ icon: 'none', title: '已经加载完毕啦' })
+
   const res = await getHomeGuessApi(pageParams.value)
-  console.log(res)
-  guessList.value = res.result.items
+  guessList.value.push(...res.result.items)
+
+  // 判断是否加载完全部数据
+  if (pageParams.value.page < res.result.pages) {
+    pageParams.value.page++
+  } else {
+    finish.value = true
+  }
 }
 
 // 组件生命周期调用
 onMounted(() => getHomeGuessFn())
+
+// 暴露方法
+defineExpose({
+  getMore: getHomeGuessFn,
+})
 </script>
 
 <template>
@@ -39,7 +53,7 @@ onMounted(() => getHomeGuessFn())
       </view>
     </navigator>
   </view>
-  <view class="loading-text"> 正在加载... </view>
+  <view class="loading-text"> {{ finish ? '已经拉到底啦' : '正在加载...' }} </view>
 </template>
 
 <style lang="scss" scoped>

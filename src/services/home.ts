@@ -34,8 +34,6 @@ export const getHomeGuessApi = (pageParams: PageParams) => {
   return http<PageResult<GuessItem>>({
     method: 'GET',
     url: '/home/goods/guessLike',
-    data: {
-      pageParams,
-    },
+    data: pageParams,
   })
 }
