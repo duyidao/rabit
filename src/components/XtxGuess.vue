@@ -24,11 +24,19 @@ const getHomeGuessFn = async () => {
   }
 }
 
+// 下拉刷新重置数据
+const resetDataFn = () => {
+  guessList.value = []
+  pageParams.value.page = 1
+  getHomeGuessFn()
+}
+
 // 组件生命周期调用
 onMounted(() => getHomeGuessFn())
 
 // 暴露方法
 defineExpose({
+  reset: resetDataFn,
   getMore: getHomeGuessFn,
 })
 </script>
