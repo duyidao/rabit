@@ -1,5 +1,5 @@
 import { http } from '@/utils/http'
-import type { BannerItem } from '@/types/home'
+import type { BannerItem, CategoryItem } from '@/types/home'
 
 // 首页轮播图
 export const getHomeBannerApi = (distributionSite = 1) => {
@@ -9,5 +9,13 @@ export const getHomeBannerApi = (distributionSite = 1) => {
     data: {
       distributionSite,
     },
+  })
+}
+
+// 首页分类导航
+export const getHomeCategoryApi = () => {
+  return http<CategoryItem[]>({
+    method: 'GET',
+    url: '/home/category/mutli',
   })
 }
