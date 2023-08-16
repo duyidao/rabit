@@ -21,7 +21,7 @@ defineProps<{
   </view>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
 /* 前台类目 */
 .category {
   // margin: 20rpx 0 0;
