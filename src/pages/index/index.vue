@@ -1,19 +1,17 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
-import { http } from '@/utils/http'
+import { ref } from 'vue'
+import { onLoad } from '@dcloudio/uni-app'
+import { getHomeBannerApi } from '@/services/home'
+import type { BannerItem } from '@/types/home'
 import CustomNavBar from './components/CustomNavBar.vue'
 
-const bannerList = ref([])
+const bannerList = ref<BannerItem[]>([])
 const getBannerFn = async () => {
-  const res = await http<unknown>({
-    method: 'GET',
-    url: '/home/banner',
-  })
-  console.log(res)
+  const res = await getHomeBannerApi()
   bannerList.value = res.result
 }
 
-onMounted(() => getBannerFn())
+onLoad(() => getBannerFn())
 </script>
 
 <template>
