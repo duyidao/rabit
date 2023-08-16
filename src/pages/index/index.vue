@@ -4,6 +4,7 @@ import { onLoad } from '@dcloudio/uni-app'
 import { getHomeBannerApi, getHomeCategoryApi, getHomeHotApi } from '@/services/home'
 import type { XtxGuessInstance } from '@/types/components'
 import type { BannerItem, CategoryItem, HotItem } from '@/types/home'
+import PageSkeleton from './components/PageSkeleton.vue'
 import CategoryPanel from './components/CategoryPanel.vue'
 import HotPanel from './components/HotPanel.vue'
 import CustomNavBar from './components/CustomNavBar.vue'
@@ -29,10 +30,15 @@ const getHotFn = async () => {
   hotList.value = res.result
 }
 
-onLoad(() => {
-  getBannerFn()
-  getCategoryFn()
-  getHotFn()
+const isLoading = ref(true)
+onLoad(async () => {
+  isLoading.value = true
+  await Promise.all(
+    [getBannerFn(), getCategoryFn(), getHotFn()].map((v) =>
+      v.catch((err) => uni.showToast({ icon: 'none', title: err })),
+    ),
+  )
+  isLoading.value = false
 })
 
 const guessRef = ref<XtxGuessInstance>()
@@ -54,13 +60,16 @@ const onRefresherrefresh = async () => {
   guessRef.value?.reset()
 
   // 加载完毕关闭动画
+  isTriggered.value = false
 }
 </script>
 
 <template>
   <!-- 自定义头部 -->
   <CustomNavBar />
+  <PageSkeleton v-if="isLoading" />
   <scroll-view
+    v-else
     refresher-enabled
     scroll-y
     class="scroll-view"
