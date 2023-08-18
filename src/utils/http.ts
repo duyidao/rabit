@@ -69,8 +69,6 @@ export const http = <T>(options: UniApp.RequestOptions) => {
 
       // 请求成功
       success(res) {
-        console.log(res)
-
         if (res.statusCode >= 200 && res.statusCode < 300) {
           // 提取核心数据 res.data
           resolve(res.data as Data<T>)
