@@ -5,6 +5,7 @@ import type { GoodsResult } from '@/types/goods'
 import { ref } from 'vue'
 import AddressPanel from './components/AddressPanel.vue'
 import ServicePanel from './components/ServicePanel.vue'
+import PanelSkeleton from './components/PanelSkeleton.vue'
 
 // 获取屏幕边界到安全区域距离
 const { safeAreaInsets } = uni.getSystemInfoSync()
@@ -150,6 +151,8 @@ const openPopup = (name: typeof popupName.value) => {
     </view>
   </scroll-view>
 
+  <PanelSkeleton v-else />
+
   <!-- 用户操作 -->
   <view class="toolbar" :style="{ paddingBottom: safeAreaInsets?.bottom + 'px' }">
     <view class="icons">
@@ -170,14 +173,14 @@ const openPopup = (name: typeof popupName.value) => {
 
 <style lang="scss">
 page {
-  height: 100%;
+  height: 100vh;
   overflow: hidden;
   display: flex;
   flex-direction: column;
 }
 
 .viewport {
-  height: 100vh;
+  height: calc(100vh - 110rpx);
   background-color: #f4f4f4;
 }
 
@@ -396,6 +399,10 @@ page {
 
 /* 底部工具栏 */
 .toolbar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100vw;
   background-color: #fff;
   height: 100rpx;
   padding: 0 20rpx;
@@ -403,7 +410,7 @@ page {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  box-sizing: content-box;
+  box-sizing: border-box;
   .buttons {
     display: flex;
     & > view {
