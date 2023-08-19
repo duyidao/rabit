@@ -36,6 +36,32 @@ const getHotRecommendFn = async () => {
 onLoad(() => {
   getHotRecommendFn()
 })
+
+// 触底加载事件
+const finish = ref<boolean>(false)
+const onScrolltolower = async () => {
+  const subType = hotRecommend.value.subTypes[activeIndex.value]
+
+  if (subType.goodsItems.page < subType.goodsItems.pages) {
+    finish.value = false
+    // 当前页码累加
+    subType.goodsItems.page++
+    // 调用接口获取数据
+    const res = await getHotRecommendApi(currentItem!.url, {
+      page: subType.goodsItems.page,
+      subType: subType.id,
+      pageSize: 10,
+    })
+    // 新数据追加到数组内
+    subType.goodsItems.items.push(...res.result.subTypes[activeIndex.value].goodsItems.items)
+  } else {
+    finish.value = true
+    uni.showToast({
+      icon: 'none',
+      title: '已经拉到最底部咯',
+    })
+  }
+}
 </script>
 
 <template>
@@ -56,7 +82,12 @@ onLoad(() => {
       >
     </view>
     <!-- 推荐列表 -->
-    <scroll-view v-if="hotRecommend.id" scroll-y class="scroll-view">
+    <scroll-view
+      v-if="hotRecommend.id"
+      scroll-y
+      class="scroll-view"
+      @scrolltolower="onScrolltolower"
+    >
       <view class="goods">
         <navigator
           hover-class="none"
@@ -73,7 +104,7 @@ onLoad(() => {
           </view>
         </navigator>
       </view>
-      <view class="loading-text">正在加载...</view>
+      <view class="loading-text">{{ finish ? '已经拉到最底部咯' : '正在加载...' }}</view>
     </scroll-view>
   </view>
 </template>
