@@ -22,8 +22,17 @@ onLoad(() => getGoodsByIdFn())
 
 // 切换轮播图时修改轮播图的序号
 const activeIndex = ref<number>(1)
-const onChange = (e: any) => {
+const onChange: UniHelper.SwiperOnChange = (e) => {
   activeIndex.value = +e.detail.current + 1
+}
+
+// 点击图片预览
+const onPreview = (img: string, i: number) => {
+  uni.previewImage({
+    current: img,
+    urls: goodsResult.value.mainPictures,
+    index: i,
+  })
 }
 </script>
 
@@ -34,8 +43,8 @@ const onChange = (e: any) => {
       <!-- 商品主图 -->
       <view class="preview">
         <swiper circular @change="onChange">
-          <swiper-item v-for="img in goodsResult.mainPictures" :key="img">
-            <image mode="aspectFill" :src="img" />
+          <swiper-item v-for="(img, index) in goodsResult.mainPictures" :key="img">
+            <image @tap="onPreview(img, index)" mode="aspectFill" :src="img" />
           </swiper-item>
         </swiper>
         <view class="indicator">
