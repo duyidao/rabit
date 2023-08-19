@@ -101,6 +101,7 @@ page {
   height: 100%;
   display: flex;
   flex-direction: column;
+  padding-top: 20rpx;
 }
 .search {
   padding: 0 30rpx 20rpx;
