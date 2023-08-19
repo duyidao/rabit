@@ -50,6 +50,12 @@
       "style": {
         "navigationBarTitleText": "热门推荐"
       }
+    },
+    {
+      "path": "pages/category/index",
+      "style": {
+        "navigationBarTitleText": "分类"
+      }
     }
   ],
   "globalStyle": {
@@ -68,6 +74,12 @@
         "pagePath": "pages/index/index",
         "iconPath": "static/tabs/home_default.png",
         "selectedIconPath": "static/tabs/home_selected.png"
+      },
+      {
+        "text": "分类",
+        "pagePath": "pages/category/index",
+        "iconPath": "static/tabs/category_default.png",
+        "selectedIconPath": "static/tabs/category_selected.png"
       },
       {
         "text": "购物车",
