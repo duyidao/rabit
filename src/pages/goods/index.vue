@@ -34,6 +34,11 @@ const onPreview = (img: string, i: number) => {
     index: i,
   })
 }
+
+const popup = ref<{
+  open: (type?: UniHelper.UniPopupType) => void
+  close: () => void
+}>()
 </script>
 
 <template>
@@ -68,15 +73,15 @@ const onPreview = (img: string, i: number) => {
       <view class="action">
         <view class="item arrow">
           <text class="label">选择</text>
-          <text class="text ellipsis"> 请选择商品规格 </text>
+          <text class="text ellipsis" @tap="popup?.open()"> 请选择商品规格 </text>
         </view>
         <view class="item arrow">
           <text class="label">送至</text>
-          <text class="text ellipsis"> 请选择收获地址 </text>
+          <text class="text ellipsis" @tap="popup?.open()"> 请选择收获地址 </text>
         </view>
         <view class="item arrow">
           <text class="label">服务</text>
-          <text class="text ellipsis"> 无忧退 快速退款 免费包邮 </text>
+          <text class="text ellipsis" @tap="popup?.open()"> 无忧退 快速退款 免费包邮 </text>
         </view>
       </view>
     </view>
@@ -105,6 +110,12 @@ const onPreview = (img: string, i: number) => {
         ></image>
       </view>
     </view>
+
+    <!-- 弹出层 -->
+    <uni-popup ref="popup" type="bottom" background-color="#fff">
+      底部弹出 Popup
+      <button @tap="popup?.close()">关闭</button>
+    </uni-popup>
 
     <!-- 同类推荐 -->
     <view class="similar panel">
