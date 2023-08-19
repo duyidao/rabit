@@ -20,4 +20,5 @@ export type SubTypeItem = {
   title: string
   /** 子类对应的商品集合 */
   goodsItems: PageResult<GoodsItem>
+  finish?: boolean
 }
