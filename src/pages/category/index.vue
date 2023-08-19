@@ -2,7 +2,7 @@
 import { getHomeBannerApi } from '@/services/home'
 import type { BannerItem } from '@/types/home'
 import { onLoad } from '@dcloudio/uni-app'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { getCategoryTopAPI } from '@/services/category'
 import type { CategoryTopItem } from '@/types/category'
 
@@ -19,6 +19,11 @@ const getCategoryTopFn = async () => {
   const res = await getCategoryTopAPI()
   categoryTopList.value = res.result
 }
+
+// 提取二级分类数据
+const subCategoryList = computed(() => {
+  return categoryTopList.value[activeIndex.value]?.children || []
+})
 
 onLoad(() => {
   getBannerFn()
@@ -56,7 +61,7 @@ const activeIndex = ref<number>(0)
         <XtxSwiper :list="bannerList" />
         <!-- 内容区域 -->
         <template v-if="categoryTopList.length > 0">
-          <view class="panel" v-for="item in categoryTopList[activeIndex].children" :key="item.id">
+          <view class="panel" v-for="item in subCategoryList" :key="item.id">
             <view class="title">
               <text class="name">{{ item.name }}</text>
               <navigator class="more" hover-class="none">全部</navigator>
