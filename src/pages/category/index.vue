@@ -5,12 +5,16 @@ import { onLoad } from '@dcloudio/uni-app'
 import { computed, ref } from 'vue'
 import { getCategoryTopAPI } from '@/services/category'
 import type { CategoryTopItem } from '@/types/category'
+import PageSkeleton from './components/PageSkeleton.vue'
 
 // 轮播图
 const bannerList = ref<BannerItem[]>([])
+const show = ref<boolean>(false)
 const getBannerFn = async () => {
+  show.value = false
   const res = await getHomeBannerApi(2)
   bannerList.value = res.result
+  show.value = true
 }
 
 // 一级分类
@@ -42,7 +46,7 @@ const activeIndex = ref<number>(0)
       </view>
     </view>
     <!-- 分类 -->
-    <view class="categories">
+    <view v-if="show" class="categories">
       <!-- 左侧：一级分类 -->
       <scroll-view class="primary" scroll-y>
         <view
@@ -60,32 +64,31 @@ const activeIndex = ref<number>(0)
         <!-- 轮播图 -->
         <XtxSwiper :list="bannerList" />
         <!-- 内容区域 -->
-        <template v-if="categoryTopList.length > 0">
-          <view class="panel" v-for="item in subCategoryList" :key="item.id">
-            <view class="title">
-              <text class="name">{{ item.name }}</text>
-              <navigator class="more" hover-class="none">全部</navigator>
-            </view>
-            <view class="section">
-              <navigator
-                v-for="goods in item.goods"
-                :key="goods.id"
-                class="goods"
-                hover-class="none"
-                :url="`/pages/goods/index?id=${goods.id}`"
-              >
-                <image class="image" :src="goods.picture"></image>
-                <view class="name ellipsis">{{ goods.name }}</view>
-                <view class="price">
-                  <text class="symbol">¥</text>
-                  <text class="number">{{ goods.price }}</text>
-                </view>
-              </navigator>
-            </view>
+        <view class="panel" v-for="item in subCategoryList" :key="item.id">
+          <view class="title">
+            <text class="name">{{ item.name }}</text>
+            <navigator class="more" hover-class="none">全部</navigator>
           </view>
-        </template>
+          <view class="section">
+            <navigator
+              v-for="goods in item.goods"
+              :key="goods.id"
+              class="goods"
+              hover-class="none"
+              :url="`/pages/goods/index?id=${goods.id}`"
+            >
+              <image class="image" :src="goods.picture"></image>
+              <view class="name ellipsis">{{ goods.name }}</view>
+              <view class="price">
+                <text class="symbol">¥</text>
+                <text class="number">{{ goods.price }}</text>
+              </view>
+            </navigator>
+          </view>
+        </view>
       </scroll-view>
     </view>
+    <PageSkeleton v-else />
   </view>
 </template>
 
