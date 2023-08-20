@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { loginApi, LoginMinApi } from '@/services/login'
 import { onLoad } from '@dcloudio/uni-app'
+import { useMemberStore } from '@/stores/modules/member'
 
 // 获取 code 登录凭证
 let code = ''
@@ -27,11 +28,13 @@ const onGetPhoneNumber: UniHelper.ButtonOnGetphonenumber = (ev) => {
 const loginFn = async () => {
   const res = await LoginMinApi('18898665959')
   if (res.code === '1') {
+    const memberStore = useMemberStore()
+    memberStore.setProfile(res.result)
     // 登录成功
     uni.showToast({
       title: '登录成功',
     })
-    uni.navigateTo({
+    uni.switchTab({
       url: '/pages/index/index',
     })
   }

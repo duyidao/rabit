@@ -1,3 +1,4 @@
+import type { LoginResult } from '@/types/member'
 import { http } from '@/utils/http'
 
 // 手机快捷登录
@@ -16,7 +17,7 @@ export const loginApi = (data: LoginParams) => {
 
 // 小程序登录
 export const LoginMinApi = (phoneNumber: string) => {
-  return http<any>({
+  return http<LoginResult>({
     method: 'POST',
     url: '/login/wxMin/simple',
     data: {
