@@ -3,7 +3,9 @@ import { getMemberProfileAPI, putMemberProfileAPI } from '@/services/profile'
 import { onLoad } from '@dcloudio/uni-app'
 import type { ProfileDetail } from '@/types/member'
 import { ref } from 'vue'
+import { useMemberStore } from '@/stores/modules/member'
 
+const memberStore = useMemberStore()
 // 获取屏幕边界到安全区域距离
 const { safeAreaInsets } = uni.getSystemInfoSync()
 
@@ -33,6 +35,7 @@ const onChangeAvater = async () => {
           if (success.statusCode === 200) {
             const avater = JSON.parse(success.data).result.avater
             memberProfile.value!.avatar = avater
+            memberStore.profile!.avatar = avater
           } else {
             uni.showToast({
               icon: 'error',
@@ -50,10 +53,13 @@ const onSubmit = async () => {
   const res = await putMemberProfileAPI({
     nickname: memberProfile.value?.nickname,
   })
+  // 更新store仓库
+  memberStore.profile!.nickname = res.result.nickname
   uni.showToast({
     title: '修改成功',
   })
-  getMemberProfileFn()
+  // 返回上一页
+  uni.navigateBack()
 }
 </script>
 
