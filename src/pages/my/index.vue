@@ -37,7 +37,7 @@ const orderTypes = [
       </view>
       <!-- 情况2：未登录 -->
       <view class="overview" v-else>
-        <navigator url="/pages/login/login" hover-class="none">
+        <navigator url="/pages/login/index" hover-class="none">
           <image
             class="avatar gray"
             mode="aspectFill"
