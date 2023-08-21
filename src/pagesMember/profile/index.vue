@@ -53,11 +53,31 @@ const onChangeGender: UniHelper.RadioGroupOnChange = (ev) => {
   memberProfile.value.gender = ev.detail.value as Gender
 }
 
+// 修改生日
+const onChangeBirthday: UniHelper.DatePickerOnChange = (ev) => {
+  memberProfile.value.birthday = ev.detail.value
+}
+
+// 修改城市
+let fullLocationCode: [string, string, string] = ['', '', '']
+const onChangeAddress: UniHelper.RegionPickerOnChange = (ev) => {
+  // 修改前端界面
+  memberProfile.value.fullLocation = ev.detail.value.join(' ')
+  // 提交给后端的地址的code
+  fullLocationCode = ev.detail.code!
+}
+
 // 保存信息修改
 const onSubmit = async () => {
+  const { nickname, gender, birthday, profession } = memberProfile.value
   const res = await putMemberProfileAPI({
-    nickname: memberProfile.value?.nickname,
-    gender: memberProfile.value?.gender,
+    nickname,
+    gender,
+    birthday,
+    provinceCode: fullLocationCode[0],
+    cityCode: fullLocationCode[1],
+    countyCode: fullLocationCode[2],
+    profession,
   })
   // 更新store仓库
   memberStore.profile!.nickname = res.result.nickname
@@ -121,15 +141,21 @@ const onSubmit = async () => {
             start="1900-01-01"
             :end="new Date()"
             :value="memberProfile?.birthday"
+            @change="onChangeBirthday"
           >
-            <view v-if="false">{{ memberProfile?.birthday }}</view>
+            <view v-if="memberProfile?.birthday">{{ memberProfile?.birthday }}</view>
             <view class="placeholder" v-else>请选择日期</view>
           </picker>
         </view>
         <view class="form-item">
           <text class="label">城市</text>
-          <picker class="picker" mode="region" :value="memberProfile?.fullLocation?.split(' ')">
-            <view v-if="false">{{ memberProfile?.fullLocation }}</view>
+          <picker
+            class="picker"
+            mode="region"
+            :value="memberProfile?.fullLocation?.split(' ')"
+            @change="onChangeAddress"
+          >
+            <view v-if="memberProfile?.fullLocation">{{ memberProfile?.fullLocation }}</view>
             <view class="placeholder" v-else>请选择城市</view>
           </picker>
         </view>
@@ -139,7 +165,7 @@ const onSubmit = async () => {
             class="input"
             type="text"
             placeholder="请填写职业"
-            :value="memberProfile?.profession"
+            v-model="memberProfile.profession"
           />
         </view>
       </view>
