@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { getMemberProfileAPI } from '@/services/profile'
+import { getMemberProfileAPI, putMemberProfileAPI } from '@/services/profile'
 import { onLoad } from '@dcloudio/uni-app'
 import type { ProfileDetail } from '@/types/member'
 import { ref } from 'vue'
@@ -7,7 +7,7 @@ import { ref } from 'vue'
 // 获取屏幕边界到安全区域距离
 const { safeAreaInsets } = uni.getSystemInfoSync()
 
-const memberProfile = ref<ProfileDetail>()
+const memberProfile = ref<ProfileDetail>({} as ProfileDetail)
 const getMemberProfileFn = async () => {
   const res = await getMemberProfileAPI()
   memberProfile.value = res.result
@@ -44,6 +44,17 @@ const onChangeAvater = async () => {
     },
   })
 }
+
+// 保存信息修改
+const onSubmit = async () => {
+  const res = await putMemberProfileAPI({
+    nickname: memberProfile.value?.nickname,
+  })
+  uni.showToast({
+    title: '修改成功',
+  })
+  getMemberProfileFn()
+}
 </script>
 
 <template>
@@ -74,7 +85,7 @@ const onChangeAvater = async () => {
             class="input"
             type="text"
             placeholder="请填写昵称"
-            :value="memberProfile?.nickname"
+            v-model="memberProfile.nickname"
           />
         </view>
         <view class="form-item">
@@ -121,7 +132,7 @@ const onChangeAvater = async () => {
         </view>
       </view>
       <!-- 提交按钮 -->
-      <button class="form-button">保 存</button>
+      <button class="form-button" @tap="onSubmit">保 存</button>
     </view>
   </view>
 </template>
