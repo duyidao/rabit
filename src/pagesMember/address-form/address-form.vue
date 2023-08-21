@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { postMemberAddressAPI, getAddressItemAPI } from '@/services/address'
-import type { AddressParams, AddressDetail } from '@/types/address'
+import { postMemberAddressAPI, getAddressItemAPI, putAddressAPI } from '@/services/address'
+import type { AddressParams } from '@/types/address'
 
 // 表单数据
 const form = ref<AddressParams>({
@@ -25,6 +25,7 @@ uni.setNavigationBarTitle({
 if (query.id) {
   getAddressItemAPI(query.id).then((res) => {
     console.log(res)
+    form.value = res.result
   })
 }
 
@@ -49,7 +50,8 @@ const onChangeDefault: UniHelper.SwitchOnChange = (ev) => {
 
 // 点击保存按钮
 const onSubmit = async () => {
-  const res = await postMemberAddressAPI(form.value)
+  if (query.id) await putAddressAPI(query.id, form.value)
+  else await postMemberAddressAPI(form.value)
   uni.showToast({
     title: query.id ? '修改成功' : '新增成功',
   })

@@ -17,8 +17,3 @@ export type AddressParams = {
   /** 默认地址，1为是，0为否 */
   isDefault: number
 }
-
-export type AddressDetail = AddressItem & {
-  addressTags?: any
-  postalCode?: any
-}

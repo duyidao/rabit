@@ -1,4 +1,4 @@
-import type { AddressParams, AddressDetail } from '@/types/address'
+import type { AddressParams } from '@/types/address'
 import type { AddressItem } from '@/types/global'
 import { http } from '@/utils/http'
 
@@ -28,8 +28,19 @@ export const getAddressListAPI = () => {
  * 获取收货地址详情
  */
 export const getAddressItemAPI = (id: string) => {
-  return http<AddressDetail>({
+  return http<AddressItem>({
     method: 'GET',
     url: `/member/address/${id}`,
+  })
+}
+
+/**
+ * 修改收货地址
+ */
+export const putAddressAPI = (id: string, data: AddressParams) => {
+  return http<any>({
+    method: 'PUT',
+    url: `/member/address/${id}`,
+    data,
   })
 }
