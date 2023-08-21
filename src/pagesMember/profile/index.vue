@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { getMemberProfileAPI, putMemberProfileAPI } from '@/services/profile'
 import { onLoad } from '@dcloudio/uni-app'
-import type { ProfileDetail } from '@/types/member'
+import type { Gender, ProfileDetail } from '@/types/member'
 import { ref } from 'vue'
 import { useMemberStore } from '@/stores/modules/member'
 
@@ -48,10 +48,16 @@ const onChangeAvater = async () => {
   })
 }
 
+// 修改性别
+const onChangeGender: UniHelper.RadioGroupOnChange = (ev) => {
+  memberProfile.value.gender = ev.detail.value as Gender
+}
+
 // 保存信息修改
 const onSubmit = async () => {
   const res = await putMemberProfileAPI({
     nickname: memberProfile.value?.nickname,
+    gender: memberProfile.value?.gender,
   })
   // 更新store仓库
   memberStore.profile!.nickname = res.result.nickname
@@ -59,7 +65,7 @@ const onSubmit = async () => {
     title: '修改成功',
   })
   // 返回上一页
-  uni.navigateBack()
+  setTimeout(() => uni.navigateBack(), 400)
 }
 </script>
 
@@ -96,7 +102,7 @@ const onSubmit = async () => {
         </view>
         <view class="form-item">
           <text class="label">性别</text>
-          <radio-group>
+          <radio-group @change="onChangeGender">
             <label class="radio">
               <radio value="男" color="#27ba9b" :checked="memberProfile?.gender === '男'" />
               男
