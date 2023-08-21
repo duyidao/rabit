@@ -2,12 +2,14 @@
 import { ref } from 'vue'
 import { onLoad } from '@dcloudio/uni-app'
 import { getHomeBannerApi, getHomeCategoryApi, getHomeHotApi } from '@/services/home'
-import type { XtxGuessInstance } from '@/types/components'
 import type { BannerItem, CategoryItem, HotItem } from '@/types/home'
+import { useGuessList } from '@/composables/index'
 import PageSkeleton from './components/PageSkeleton.vue'
 import CategoryPanel from './components/CategoryPanel.vue'
 import HotPanel from './components/HotPanel.vue'
 import CustomNavBar from './components/CustomNavBar.vue'
+
+const { guessRef, onScrolltolower } = useGuessList()
 
 // 轮播图
 const bannerList = ref<BannerItem[]>([])
@@ -40,12 +42,6 @@ onLoad(async () => {
   )
   isLoading.value = false
 })
-
-const guessRef = ref<XtxGuessInstance>()
-// 触底方法
-const onScrolltolower = () => {
-  guessRef.value?.getMore()
-}
 
 const isTriggered = ref<boolean>(false)
 // 下拉刷新

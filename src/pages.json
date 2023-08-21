@@ -97,5 +97,27 @@
       }
     ]
   },
-  "uniIdRouter": {}
+  "uniIdRouter": {},
+  // 分包规则
+  "subPackages": [
+    {
+      // 子包目录
+      "root": "pagesMember",
+      // 页面路径
+      "pages": [
+        {
+          "path": "settings/index",
+          "style": {
+            "navigationBarTitleText": "设置"
+          }
+        }
+      ]
+    }
+  ],
+  "preloadRule": {
+    "pages/my/index": {
+      "network": "all",
+      "packages": ["pagesMember"]
+    }
+  }
 }
