@@ -3,9 +3,11 @@ import { getGoodsByIdAPI } from '@/services/goods'
 import { onLoad } from '@dcloudio/uni-app'
 import type { GoodsResult } from '@/types/goods'
 import { ref } from 'vue'
+import type { SkuPopupLocaldata } from '@/components/vk-data-goods-sku-popup/vk-data-goods-sku-popup'
 import AddressPanel from './components/AddressPanel.vue'
 import ServicePanel from './components/ServicePanel.vue'
 import PanelSkeleton from './components/PanelSkeleton.vue'
+import vkDataGoodsSkuPopup from '@/components/vk-data-goods-sku-popup/vk-data-goods-sku-popup.vue'
 
 // 获取屏幕边界到安全区域距离
 const { safeAreaInsets } = uni.getSystemInfoSync()
@@ -19,6 +21,25 @@ const goodsResult = ref<GoodsResult>({} as GoodsResult)
 const getGoodsByIdFn = async () => {
   const res = await getGoodsByIdAPI(query.id)
   goodsResult.value = res.result
+  // sku所需格式
+  localdata.value = {
+    _id: res.result.id,
+    name: res.result.name,
+    goods_thumb: res.result.mainPictures[0],
+    spec_list: res.result.specs.map((item) => ({
+      name: item.name,
+      list: item.values,
+    })),
+    sku_list: res.result.skus.map((item) => ({
+      _id: item.id,
+      goods_id: res.result.id,
+      goods_name: res.result.name,
+      image: item.picture,
+      price: item.price * 100,
+      sku_name_arr: item.specs.map((v) => v.valueName),
+      stock: item.inventory,
+    })),
+  }
 }
 
 onLoad(() => getGoodsByIdFn())
@@ -48,9 +69,15 @@ const openPopup = (name: typeof popupName.value) => {
   popup.value?.open()
   popupName.value = name
 }
+
+const isShowSku = ref<boolean>(false)
+
+const localdata = ref<SkuPopupLocaldata>({} as SkuPopupLocaldata)
 </script>
 
 <template>
+  <vkDataGoodsSkuPopup :localdata="localdata" v-model="isShowSku" />
+
   <scroll-view scroll-y class="viewport" v-if="goodsResult.id">
     <!-- 基本信息 -->
     <view class="goods">
@@ -82,7 +109,7 @@ const openPopup = (name: typeof popupName.value) => {
       <view class="action">
         <view class="item arrow">
           <text class="label">选择</text>
-          <text class="text ellipsis" @tap="openPopup('service')"> 请选择商品规格 </text>
+          <text class="text ellipsis" @tap="isShowSku = true"> 请选择商品规格 </text>
         </view>
         <view class="item arrow">
           <text class="label">送至</text>
@@ -90,7 +117,7 @@ const openPopup = (name: typeof popupName.value) => {
         </view>
         <view class="item arrow">
           <text class="label">服务</text>
-          <text class="text ellipsis"> 无忧退 快速退款 免费包邮 </text>
+          <text class="text ellipsis" @tap="openPopup('service')"> 无忧退 快速退款 免费包邮 </text>
         </view>
       </view>
     </view>
