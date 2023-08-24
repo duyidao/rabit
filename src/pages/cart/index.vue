@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { getMemberCartAPI } from '@/services/cart'
+import { getMemberCartAPI, deleteMemberCartAPI, putMemberCartBySkuIdAPI } from '@/services/cart'
 import { useMemberStore } from '@/stores'
 import { onShow } from '@dcloudio/uni-app'
 import type { CartItem } from '@/types/cart'
 import { ref } from 'vue'
+import type { InputNumberBoxEvent } from '@/components/vk-data-input-number-box/vk-data-input-number-box'
 
 // 获取会员Store
 const memberStore = useMemberStore()
@@ -17,6 +18,24 @@ const getMemberCartFn = async () => {
 onShow(() => {
   if (memberStore.profile) getMemberCartFn()
 })
+
+const onDelete = (id: string) => {
+  uni.showModal({
+    title: '是否确认删除？',
+    success: async () => {
+      await deleteMemberCartAPI({
+        ids: [id],
+      })
+      uni.showToast({ title: '删除成功' })
+      getMemberCartFn()
+    },
+  })
+}
+
+// 修改数量
+const onChangeCount = (ev: InputNumberBoxEvent) => {
+  putMemberCartBySkuIdAPI(ev.index, { count: ev.value })
+}
 </script>
 
 <template>
@@ -37,7 +56,7 @@ onShow(() => {
             <!-- 商品信息 -->
             <view class="goods">
               <!-- 选中状态 -->
-              <text class="checkbox" :class="{ checked: item.checked }"></text>
+              <checkbox class="checkbox" :class="{ checked: item.checked }"></checkbox>
               <navigator
                 :url="`/pages/goods/index?id=${item.id}`"
                 hover-class="none"
@@ -47,20 +66,27 @@ onShow(() => {
                 <view class="meta">
                   <view class="name ellipsis">{{ item.name }}</view>
                   <view class="attrsText ellipsis">{{ item.attrsText }}</view>
-                  <view class="price">{{ item.price }}</view>
+                  <view class="price">{{ item.nowPrice }}</view>
                 </view>
               </navigator>
               <!-- 商品数量 -->
               <view class="count">
                 <text class="text">-</text>
-                <input class="input" type="number" :value="item.count" />
+                <input
+                  class="input"
+                  type="number"
+                  v-model="item.count"
+                  :min="1"
+                  :max="item.stock"
+                  @change="onChangeCount"
+                />
                 <text class="text">+</text>
               </view>
             </view>
             <!-- 右侧删除按钮 -->
             <template #right>
               <view class="cart-swipe-right">
-                <button class="button delete-button">删除</button>
+                <button class="button delete-button" @tap="onDelete(item.id)">删除</button>
               </view>
             </template>
           </uni-swipe-action-item>
@@ -159,12 +185,12 @@ onShow(() => {
       width: 80rpx;
       height: 100%;
 
-      &::before {
-        content: '\e6cd';
-        font-family: 'erabbit' !important;
-        font-size: 40rpx;
-        color: #444;
-      }
+      // &::before {
+      //   content: '\e6cd';
+      //   font-family: 'erabbit' !important;
+      //   font-size: 40rpx;
+      //   color: #444;
+      // }
 
       &.checked::before {
         content: '\e6cc';
